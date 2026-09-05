@@ -1,5 +1,7 @@
 # Magic Square Physical Solver
 
+
+🚀 **[Live Demo](https://kylemath.github.io/magicSquare_physicalSolver)** 🚀
 Magic Square Physical Solver project.
 
 ## Getting Started
