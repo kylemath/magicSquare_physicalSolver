@@ -2,7 +2,7 @@
   "id": "magicSquare",
   "title": "Magic Square",
   "kind": "project",
-  "status": "active",
+  "status": "published",
   "screenshot": "./screenshot.png",
   "server": {
     "openPath": "/",
@@ -10,5 +10,6 @@
     "type": "static",
     "port": 8080
   },
-  "oneLiner": "Magic Square Physical Solver project."
+  "oneLiner": "Magic Square Physical Solver project.",
+  "demoUrl": "https://kylemath.github.io/magicSquare_physicalSolver"
 }
