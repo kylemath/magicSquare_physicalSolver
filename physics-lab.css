@@ -1,0 +1,281 @@
+:root {
+  color-scheme: dark;
+  --bg: #0d1113;
+  --panel: #171c1f;
+  --panel-strong: #20282c;
+  --ink: #eef1ea;
+  --muted: #a5aea9;
+  --line: #303b40;
+  --accent: #d28a52;
+  --blue: #6daab8;
+  --red: #c86958;
+  --green: #90b96f;
+  --gold: #d0ad63;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    var(--bg);
+  background-size: 34px 34px;
+  color: var(--ink);
+  margin: 0;
+}
+
+.hero,
+.lab-shell {
+  margin: 0 auto;
+  width: min(1560px, calc(100vw - 36px));
+}
+
+.hero {
+  align-items: end;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 34px 0 18px;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+h1 {
+  font-size: clamp(2.2rem, 5vw, 5.2rem);
+  line-height: 0.98;
+  margin-bottom: 14px;
+}
+
+h2 {
+  font-size: 1.6rem;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.hero p,
+.panel-copy p,
+.muted {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.hero p {
+  max-width: 960px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 820;
+  letter-spacing: 0.14em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+code {
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  padding: 0.05rem 0.24rem;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+a,
+button {
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font: inherit;
+  text-decoration: none;
+}
+
+a {
+  color: var(--accent);
+  font-weight: 760;
+  padding: 10px 12px;
+}
+
+.lab-shell {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 340px minmax(0, 1fr);
+  padding-bottom: 36px;
+}
+
+.sidebar {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.control-card,
+.workbench {
+  background: rgba(23, 28, 31, 0.96);
+  border: 1px solid var(--line);
+}
+
+.control-card {
+  padding: 16px;
+}
+
+label {
+  color: var(--muted);
+  display: grid;
+  font-size: 0.73rem;
+  font-weight: 780;
+  gap: 7px;
+  letter-spacing: 0.07em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+select {
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font: inherit;
+  padding: 9px;
+}
+
+input[type="range"] {
+  accent-color: var(--accent);
+  width: 100%;
+}
+
+.button-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+}
+
+button {
+  background: var(--panel-strong);
+  cursor: pointer;
+  padding: 10px;
+}
+
+button:hover,
+.tab.active {
+  border-color: var(--accent);
+}
+
+.stats {
+  display: grid;
+  gap: 8px;
+}
+
+.stat {
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  padding: 11px;
+}
+
+.stat span {
+  color: var(--muted);
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 820;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.stat strong {
+  font-size: 1.06rem;
+}
+
+.workbench {
+  min-width: 0;
+  padding: 14px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.tab {
+  color: var(--muted);
+}
+
+.tab.active {
+  color: var(--ink);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.panel-copy {
+  align-items: end;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 0.8fr) minmax(240px, 0.55fr);
+  margin-bottom: 14px;
+}
+
+canvas,
+.three-host {
+  background: #07090a;
+  border: 1px solid var(--line);
+  display: block;
+  min-height: 600px;
+  width: 100%;
+}
+
+canvas {
+  height: auto;
+  max-width: 100%;
+}
+
+.three-host {
+  overflow: hidden;
+  position: relative;
+}
+
+.three-host canvas {
+  border: 0;
+  min-height: 0;
+}
+
+@media (max-width: 1120px) {
+  .hero,
+  .lab-shell,
+  .panel-copy {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  nav,
+  .tabs {
+    display: grid;
+  }
+}

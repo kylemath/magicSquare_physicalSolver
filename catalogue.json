@@ -1,0 +1,14 @@
+{
+  "id": "magicSquare",
+  "title": "Magic Square",
+  "kind": "project",
+  "status": "active",
+  "screenshot": "./screenshot.png",
+  "server": {
+    "openPath": "/",
+    "autoStart": false,
+    "type": "static",
+    "port": 8080
+  },
+  "oneLiner": "Magic Square Physical Solver project."
+}

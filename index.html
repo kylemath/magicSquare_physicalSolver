@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Magic Square Spectral Geometry</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Interactive academic note</p>
+        <h1>Magic squares as spectral height fields</h1>
+        <p class="lede">
+          A normal magic square is a constrained permutation of heights over a
+          lattice. Its centered 3D covariance is almost too forgiving, so this
+          paper studies multiscale energy spectra that expose local structure.
+        </p>
+        <p class="lede-link">
+          <a href="./vector-physics.html">Open the 4 x 4 vector physics page</a>
+          ·
+          <a href="./energy-decomposition.html">Open the line-energy decomposition page</a>
+          ·
+          <a href="./physics-lab.html">Open the physics simulation lab</a>
+          ·
+          <a href="./bubble-trinity.html">Open the bubble trinity lab</a>
+        </p>
+      </div>
+      <div class="hero-panel" id="heroStats"></div>
+    </header>
+
+    <main>
+      <section class="paper-grid">
+        <article class="paper-section wide">
+          <p class="section-kicker">Formal model</p>
+          <h2>From mass balance to spectral geometry</h2>
+          <div class="equation-grid">
+            <div class="equation-card">
+              <span>Centered coordinates</span>
+              <code>X_j = 2j-(n-1), Y_i = 2i-(n-1)</code>
+            </div>
+            <div class="equation-card">
+              <span>Centered height</span>
+              <code>Z_ij = 2a_ij-(n²+1)</code>
+            </div>
+            <div class="equation-card">
+              <span>Magic constraints</span>
+              <code>Σ_row Z = Σ_col Z = Σ_diag Z = 0</code>
+            </div>
+            <div class="equation-card">
+              <span>Energy spectrum</span>
+              <code>H_p(k) = -Σ_W P_p(W) log P_p(W)</code>
+            </div>
+          </div>
+          <p>
+            The ordinary 3D covariance is fixed by the value set and line
+            constraints. The geometric signal moves into higher-order and
+            multiscale quantities, especially local energy distributions
+            <code>E_p(W)=Σ|Z|^p</code> across all windows of scale <code>k</code>.
+          </p>
+        </article>
+
+        <aside class="paper-section">
+          <p class="section-kicker">Database language</p>
+          <h2>Record schema</h2>
+          <pre id="languageBlock" class="schema-block"></pre>
+        </aside>
+      </section>
+
+      <section class="control-panel" aria-label="Interactive controls">
+        <div class="control">
+          <label for="orderSelect">Order</label>
+          <select id="orderSelect">
+            <option value="3">n = 3</option>
+            <option value="4" selected>n = 4</option>
+            <option value="5">n = 5</option>
+            <option value="8">n = 8</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="classSelect">Class</label>
+          <select id="classSelect"></select>
+        </div>
+        <div class="control">
+          <label for="sampleSlider">Sample</label>
+          <input id="sampleSlider" type="range" min="0" max="0" value="0" />
+          <span id="sampleLabel">0</span>
+        </div>
+        <div class="control">
+          <label for="swapSlider">Perturbation swaps</label>
+          <input id="swapSlider" type="range" min="0" max="12" value="2" />
+          <span id="swapLabel">2</span>
+        </div>
+        <div class="control">
+          <label for="exponentSelect">Energy exponents</label>
+          <select id="exponentSelect">
+            <option value="1,2,4">p = 1, 2, 4</option>
+            <option value="0.5,1,2,4">p = 0.5, 1, 2, 4</option>
+            <option value="1,2,4,8" selected>p = 1, 2, 4, 8</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="dashboard">
+        <article class="visual-card square-card">
+          <div class="card-heading">
+            <div>
+              <p class="section-kicker">Example square</p>
+              <h2 id="squareTitle">Square</h2>
+            </div>
+            <span id="magicBadge" class="badge">magic</span>
+          </div>
+          <div id="squareGrid" class="square-grid"></div>
+          <p id="recordCaption" class="muted"></p>
+        </article>
+
+        <article class="visual-card">
+          <p class="section-kicker">Centered height field</p>
+          <h2>3D render</h2>
+          <canvas id="surfaceCanvas" width="720" height="460"></canvas>
+          <p class="muted">
+            Bars rise from the lattice by centered height <code>Z</code>. The
+            camera is fixed so comparisons are stable across classes.
+          </p>
+        </article>
+
+        <article class="visual-card">
+          <p class="section-kicker">Line balance</p>
+          <h2>Magic constraints as residuals</h2>
+          <canvas id="lineCanvas" width="720" height="340"></canvas>
+          <p id="lineCaption" class="muted"></p>
+        </article>
+
+        <article class="visual-card">
+          <p class="section-kicker">Spectral signature</p>
+          <h2>Entropy by scale and exponent</h2>
+          <canvas id="spectrumCanvas" width="720" height="340"></canvas>
+          <p class="muted">
+            Higher <code>p</code> concentrates attention on extreme centered
+            values. Intermediate window scales are where valid and invalid
+            squares usually separate.
+          </p>
+        </article>
+
+        <article class="visual-card">
+          <p class="section-kicker">Statistical summary</p>
+          <h2>Current invariants</h2>
+          <div id="statsGrid" class="stats-grid"></div>
+        </article>
+
+        <article class="visual-card">
+          <p class="section-kicker">Local imbalance</p>
+          <h2>Window residual distribution</h2>
+          <canvas id="histCanvas" width="720" height="340"></canvas>
+          <p class="muted">
+            Uses signed sums <code>ΣZ</code> over all <code>k × k</code>
+            windows. Magic lines vanish, but local windows need not.
+          </p>
+        </article>
+      </section>
+
+      <section class="gallery-section">
+        <div class="gallery-heading">
+          <div>
+            <p class="section-kicker">8x8 energy landscape</p>
+            <h2>Ten heatmaps: valid magic fields and random controls</h2>
+            <p class="muted">
+              Each cell is colored by <code>E_p(i,j)=|2a_ij-(8²+1)|^p</code>.
+              The first five panels are valid 8x8 magic squares from a
+              doubly-even construction; the last five are random permutations.
+            </p>
+          </div>
+          <div class="control compact-control">
+            <label for="heatmapExponent">Heatmap exponent</label>
+            <select id="heatmapExponent">
+              <option value="1">p = 1</option>
+              <option value="2" selected>p = 2</option>
+              <option value="4">p = 4</option>
+              <option value="8">p = 8</option>
+            </select>
+          </div>
+        </div>
+        <div id="energyGallery" class="energy-gallery"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Dataset: 880 Frénicle-indexed order-4 normal magic squares, generated
+        by <code>scripts/generate_order4_data.py</code>. All charts are computed
+        in the browser from the selected square.
+      </p>
+    </footer>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

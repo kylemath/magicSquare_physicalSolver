@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Magic Square Physics Lab</title>
+    <link rel="stylesheet" href="./physics-lab.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Physics simulation lab</p>
+        <h1>Magic squares as zero-field states</h1>
+        <p>
+          Six linked simulations explore the same centered square as line
+          charges, flowing bubbles, spin frustration, orbital shells,
+          annealing swaps, and an energy landscape. The shared energy is
+          <code>E = Σ_L (Σ_{(i,j)∈L} Z_ij)^2</code>.
+        </p>
+      </div>
+      <nav>
+        <a href="./index.html">Spectral paper</a>
+        <a href="./energy-decomposition.html">Line energy</a>
+        <a href="./vector-physics.html">Vector physics</a>
+        <a href="./bubble-trinity.html">Bubble trinity</a>
+      </nav>
+    </header>
+
+    <main class="lab-shell">
+      <aside class="sidebar">
+        <section class="control-card">
+          <p class="eyebrow">Square source</p>
+          <label>
+            Order
+            <select id="orderSelect">
+              <option value="3">n = 3</option>
+              <option value="4" selected>n = 4</option>
+              <option value="5">n = 5</option>
+              <option value="8">n = 8</option>
+            </select>
+          </label>
+          <label>
+            Arrangement
+            <select id="classSelect"></select>
+          </label>
+          <label>
+            Sample
+            <input id="sampleSlider" type="range" min="0" max="0" value="0" />
+            <span id="sampleLabel">1/1</span>
+          </label>
+          <label>
+            Perturbation swaps
+            <input id="swapSlider" type="range" min="0" max="32" value="4" />
+            <span id="swapLabel">4</span>
+          </label>
+          <div class="button-row">
+            <button id="resetButton" type="button">Reset sim</button>
+            <button id="pauseButton" type="button">Pause</button>
+          </div>
+        </section>
+
+        <section class="control-card">
+          <p class="eyebrow">Parameters</p>
+          <label>
+            Field strength
+            <input id="fieldStrength" type="range" min="0.1" max="4" step="0.05" value="1.4" />
+          </label>
+          <label>
+            Bubble repulsion
+            <input id="repulsion" type="range" min="0" max="6" step="0.05" value="1.8" />
+          </label>
+          <label>
+            Lattice wells
+            <input id="wellStrength" type="range" min="0" max="8" step="0.05" value="2.4" />
+          </label>
+          <label>
+            Temperature
+            <input id="temperature" type="range" min="0.01" max="8" step="0.01" value="1.2" />
+          </label>
+          <label>
+            Cooling
+            <input id="cooling" type="range" min="0.990" max="1.000" step="0.001" value="0.997" />
+          </label>
+          <label>
+            Swaps per frame
+            <input id="swapsPerFrame" type="range" min="1" max="150" step="1" value="24" />
+          </label>
+          <label>
+            Height scale
+            <input id="heightScale" type="range" min="0.03" max="0.32" step="0.01" value="0.14" />
+          </label>
+          <label>
+            Trail / memory
+            <input id="memory" type="range" min="0" max="0.98" step="0.01" value="0.72" />
+          </label>
+          <label>
+            Landscape samples
+            <input id="landscapeSamples" type="range" min="24" max="260" step="4" value="96" />
+          </label>
+        </section>
+
+        <section class="control-card">
+          <p class="eyebrow">Live state</p>
+          <div id="stats" class="stats"></div>
+        </section>
+      </aside>
+
+      <section class="workbench">
+        <div class="tabs" role="tablist" aria-label="Physics simulations">
+          <button class="tab active" data-tab="filings" type="button">Iron filings</button>
+          <button class="tab" data-tab="bubbles" type="button">Bubble field</button>
+          <button class="tab" data-tab="spins" type="button">Spin lattice</button>
+          <button class="tab" data-tab="orbitals" type="button">Orbitals</button>
+          <button class="tab" data-tab="annealing" type="button">Annealing</button>
+          <button class="tab" data-tab="landscape" type="button">Landscape</button>
+        </div>
+
+        <article class="tab-panel active" id="filingsPanel">
+          <div class="panel-copy">
+            <p class="eyebrow">Iron filings / line fields</p>
+            <h2>Line charges create a field over the square</h2>
+            <p>
+              Rows, columns, and diagonals act like charged field lines.
+              Animated filings align with the local residual field. A magic
+              square makes the field collapse toward neutrality.
+            </p>
+          </div>
+          <canvas id="filingsCanvas" width="980" height="620"></canvas>
+        </article>
+
+        <article class="tab-panel" id="bubblesPanel">
+          <div class="panel-copy">
+            <p class="eyebrow">Whole-system magnetic flow</p>
+            <h2>Charged values flow around one another</h2>
+            <p>
+              Values are continuous bubbles, not swapped pairs. Every bubble
+              feels all row, column, and diagonal fields at once, repels nearby
+              bubbles, and is softly pulled toward lattice wells. The displayed
+              square is the nearest-cell assignment induced by the flow.
+            </p>
+          </div>
+          <canvas id="bubblesCanvas" width="980" height="620"></canvas>
+        </article>
+
+        <article class="tab-panel" id="spinsPanel">
+          <div class="panel-copy">
+            <p class="eyebrow">Spin lattice</p>
+            <h2>Cells as frustrated spins</h2>
+            <p>
+              Each cell’s spin is driven by its centered height and by the line
+              residuals passing through it. Large coherent regions reveal
+              imbalanced rows, columns, or diagonals.
+            </p>
+          </div>
+          <canvas id="spinsCanvas" width="980" height="620"></canvas>
+        </article>
+
+        <article class="tab-panel" id="orbitalsPanel">
+          <div class="panel-copy">
+            <p class="eyebrow">Planets / electron orbitals</p>
+            <h2>Values orbit on shells from their vector lengths</h2>
+            <p>
+              The original vector <code>(X,Y,Z)</code> sets each body’s shell
+              radius. Color and glow are driven by each cell’s line-force
+              frustration, tying the orbit picture back to magic energy.
+            </p>
+          </div>
+          <div id="orbitHost" class="three-host"></div>
+        </article>
+
+        <article class="tab-panel" id="annealingPanel">
+          <div class="panel-copy">
+            <p class="eyebrow">Simulated annealing swaps</p>
+            <h2>Values snap toward lower line energy</h2>
+            <p>
+              A proposed swap is accepted if it reduces energy, or with
+              probability <code>exp(-ΔE/T)</code>. The chart tracks how a random
+              permutation cools toward balance.
+            </p>
+          </div>
+          <canvas id="annealingCanvas" width="980" height="620"></canvas>
+        </article>
+
+        <article class="tab-panel" id="landscapePanel">
+          <div class="panel-copy">
+            <p class="eyebrow">Energy landscape</p>
+            <h2>Nearby permutations as terrain</h2>
+            <p>
+              Points are sampled one-swap and random-walk neighbors. Axes are
+              low-mode energy and high-mode residual energy; color is complete
+              line energy.
+            </p>
+          </div>
+          <canvas id="landscapeCanvas" width="980" height="620"></canvas>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="./js/physicsLabApp.js"></script>
+  </body>
+</html>

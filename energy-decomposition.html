@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Magic Square Line-Indicator Energy</title>
+    <link rel="stylesheet" href="./energy-decomposition.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Interactive theorem view</p>
+        <h1>Line-indicator covariance energy</h1>
+        <p>
+          Magic squares are exactly the zero set of a covariance energy built
+          from row, column, and diagonal indicators. This page shows the same
+          object as line stress, an energy barcode, mode spectra, residual
+          geometry, and a swap landscape.
+        </p>
+      </div>
+      <nav>
+        <a href="./index.html">Spectral paper</a>
+        <a href="./vector-physics.html">Vector physics</a>
+        <a href="./physics-lab.html">Physics lab</a>
+        <a href="./bubble-trinity.html">Bubble trinity</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="controls" aria-label="Visualization controls">
+        <label>
+          Order
+          <select id="orderSelect">
+            <option value="3">n = 3</option>
+            <option value="4" selected>n = 4</option>
+            <option value="5">n = 5</option>
+            <option value="8">n = 8</option>
+          </select>
+        </label>
+        <label>
+          Arrangement
+          <select id="classSelect"></select>
+        </label>
+        <label>
+          Sample
+          <input id="sampleSlider" type="range" min="0" max="0" value="0" />
+          <span id="sampleLabel">1/1</span>
+        </label>
+        <label>
+          Swap count
+          <input id="swapSlider" type="range" min="0" max="16" value="2" />
+          <span id="swapLabel">2</span>
+        </label>
+        <label>
+          Overlay
+          <select id="overlaySelect">
+            <option value="all" selected>rows + columns + diagonals</option>
+            <option value="rows">rows only</option>
+            <option value="cols">columns only</option>
+            <option value="diags">diagonals only</option>
+          </select>
+        </label>
+        <label>
+          Mode scale
+          <select id="modeScale">
+            <option value="linear" selected>linear</option>
+            <option value="log">log energy</option>
+          </select>
+        </label>
+        <label>
+          Random cloud
+          <input id="cloudSlider" type="range" min="0" max="160" step="8" value="64" />
+          <span id="cloudLabel">64</span>
+        </label>
+      </section>
+
+      <section class="summary-strip">
+        <div class="stat">
+          <span>Magic?</span>
+          <strong id="magicStat">-</strong>
+        </div>
+        <div class="stat">
+          <span>Complete energy</span>
+          <strong id="fullEnergyStat">-</strong>
+        </div>
+        <div class="stat">
+          <span>Low-mode energy</span>
+          <strong id="lowEnergyStat">-</strong>
+        </div>
+        <div class="stat">
+          <span>Max line residual</span>
+          <strong id="maxResidualStat">-</strong>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="panel large">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Line stress overlay</p>
+              <h2 id="squareTitle">Square</h2>
+            </div>
+            <p id="caption" class="muted"></p>
+          </div>
+          <canvas id="lineOverlay" width="820" height="620"></canvas>
+          <p class="muted">
+            Bands are signed line residuals
+            <code>ρ_L = Σ_{(i,j) in L} Z_ij</code>. A magic square makes every
+            constrained band neutral.
+          </p>
+        </article>
+
+        <article class="panel">
+          <p class="eyebrow">Energy barcode</p>
+          <h2>Indicator covariance terms</h2>
+          <canvas id="barcodeCanvas" width="640" height="360"></canvas>
+          <p class="muted">
+            Each bar is <code>Cov(I_L,Z)^2</code>. The displayed row and column
+            bars include redundant final lines; the theorem omits one of each.
+          </p>
+        </article>
+
+        <article class="panel">
+          <p class="eyebrow">Mode-energy decomposition</p>
+          <h2>Residual spectra</h2>
+          <canvas id="modeCanvas" width="640" height="360"></canvas>
+          <p class="muted">
+            Row and column residual vectors are decomposed into DCT modes. The
+            first mode is the covariance-like low mode; higher modes explain
+            why low-mode balance can fail to be magic.
+          </p>
+        </article>
+
+        <article class="panel">
+          <p class="eyebrow">Residual geometry</p>
+          <h2>Projection into mode space</h2>
+          <canvas id="geometryCanvas" width="640" height="360"></canvas>
+          <p class="muted">
+            Random arrangements form the background cloud. The selected
+            square’s row and column residuals are projected onto the first two
+            residual modes.
+          </p>
+        </article>
+
+        <article class="panel">
+          <p class="eyebrow">Swap landscape</p>
+          <h2>Energy after one swap</h2>
+          <canvas id="swapCanvas" width="640" height="360"></canvas>
+          <p class="muted">
+            Cell pair <code>(a,b)</code> is colored by
+            <code>E_full(swap(a,b))</code>. Magic squares appear as isolated
+            zero-energy states surrounded by positive energy.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="./js/energyDecompositionApp.js"></script>
+  </body>
+</html>

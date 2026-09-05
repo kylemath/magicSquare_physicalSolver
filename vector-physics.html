@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>4 x 4 Magic Square Vector Physics</title>
+    <link rel="stylesheet" href="./vector-physics.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="stage-panel">
+        <div class="stage-copy">
+          <p class="eyebrow">Vector model</p>
+          <h1>Orbiting a centered 4 x 4 magic square in 3D</h1>
+          <p>
+            Each cell is a vector from the origin to
+            <code>(X_j, Y_i, Z_ij)</code>, where
+            <code>X,Y in {-3,-1,1,3}</code> and
+            <code>Z_ij = 2a_ij - 17</code>. Each endpoint is now an independent
+            orbiting body constrained to the spherical shell whose radius is
+            the length of its original vector.
+          </p>
+          <p>
+            <a href="./physics-lab.html">Open the broader physics simulation lab</a>
+            ·
+            <a href="./bubble-trinity.html">Open the bubble trinity lab</a>
+          </p>
+        </div>
+        <div id="sceneHost" class="scene-host"></div>
+      </section>
+
+      <aside class="control-panel">
+        <div class="panel-section">
+          <p class="eyebrow">Euler-style square</p>
+          <h2>Magic constant 34</h2>
+          <div id="squareTable" class="square-table"></div>
+          <p class="muted">
+            Values are shown as <code>a / Z</code>. Opposite values sum to
+            <code>17</code>, so centered heights oppose exactly.
+          </p>
+        </div>
+
+        <div class="panel-section controls">
+          <h2>Physics controls</h2>
+          <label>
+            Shared drift X
+            <input id="spinX" type="range" min="-1.5" max="1.5" step="0.01" value="0.25" />
+          </label>
+          <label>
+            Shared drift Y
+            <input id="spinY" type="range" min="-1.5" max="1.5" step="0.01" value="0.45" />
+          </label>
+          <label>
+            Shared drift Z
+            <input id="spinZ" type="range" min="-1.5" max="1.5" step="0.01" value="0.15" />
+          </label>
+          <label>
+            Height scale
+            <input id="heightScale" type="range" min="0.06" max="0.38" step="0.01" value="0.18" />
+          </label>
+          <label>
+            Shell stiffness
+            <input id="spring" type="range" min="1" max="30" step="0.5" value="10" />
+          </label>
+          <label>
+            Damping
+            <input id="damping" type="range" min="0" max="10" step="0.1" value="2.6" />
+          </label>
+          <div class="button-row">
+            <button id="kickButton" type="button">Kick endpoints</button>
+            <button id="resetButton" type="button">Reset</button>
+            <button id="pauseButton" type="button">Pause</button>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h2>Live invariants</h2>
+          <div id="stats" class="stats"></div>
+        </div>
+      </aside>
+    </main>
+
+    <script type="module" src="./js/vectorPhysicsApp.js"></script>
+  </body>
+</html>

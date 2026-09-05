@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bubble Trinity Lab</title>
+    <link rel="stylesheet" href="./bubble-trinity.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">Trinity lab</p>
+        <h1>Bubble field paired with shell geometry</h1>
+        <p>
+          The same magic-square state is shown two ways at once. The left pane
+          is the live bubble field; the right pane lifts every bubble onto its
+          shell of radius <code>|v|</code>, with a neon hot-patch lighting up
+          the surface around each vector terminal. Pick a regime to switch the
+          physics, then tune its two knobs.
+        </p>
+      </div>
+      <div class="global-controls">
+        <label>
+          Source order
+          <select id="orderSelect">
+            <option value="3">n = 3</option>
+            <option value="4" selected>n = 4</option>
+            <option value="5">n = 5</option>
+            <option value="6">n = 6</option>
+            <option value="7">n = 7</option>
+            <option value="8">n = 8</option>
+          </select>
+        </label>
+        <label>
+          Arrangement
+          <select id="classSelect"></select>
+        </label>
+        <label>
+          Sample
+          <input id="sampleSlider" type="range" min="0" max="0" value="0" />
+          <span id="sampleLabel">1/1</span>
+        </label>
+        <label>
+          Perturbation swaps
+          <input id="swapSlider" type="range" min="0" max="32" value="0" />
+          <span id="swapLabel">0</span>
+        </label>
+        <div class="button-row">
+          <button id="resetRunButton" type="button">Reset run</button>
+          <button id="resetParamsButton" type="button">Reset params</button>
+          <button id="pauseButton" type="button">Pause</button>
+          <button id="settleButton" type="button" title="Run a directed simulated-annealing search over discrete cell assignments using 2-cycle and 3-cycle swaps. Lands the bubbles in the lowest line-energy configuration it can reach (often magic for small n). Continuous physics resumes immediately afterward, so pause or switch to Frozen lattice to lock in the result.">Settle</button>
+        </div>
+        <nav class="cross-links">
+          <a href="./physics-lab.html">Physics lab</a>
+          <a href="./vector-physics.html">Vector physics</a>
+          <a href="./energy-decomposition.html">Line energy</a>
+          <a href="./index.html">Spectral paper</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="lab-shell">
+      <section class="regime-bar" id="regimeBar" role="tablist" aria-label="Regime"></section>
+
+      <article class="hero-panel">
+        <header class="hero-head">
+          <div class="hero-title">
+            <p class="eyebrow" id="regimeEyebrow"></p>
+            <h2 id="regimeTitle"></h2>
+            <p class="muted" id="regimeCaption"></p>
+          </div>
+          <div class="hero-controls" id="heroControls"></div>
+          <div class="hero-stats" id="heroStats"></div>
+        </header>
+
+        <div class="trinity-grid">
+          <figure class="trinity-pane">
+            <figcaption><span class="dot bubble"></span>Bubble field</figcaption>
+            <canvas id="bubbleCanvas" width="640" height="640"></canvas>
+          </figure>
+          <figure class="trinity-pane">
+            <figcaption><span class="dot sphere"></span>Shell terminals</figcaption>
+            <div id="sphereHost" class="three-host"></div>
+          </figure>
+        </div>
+
+        <section class="batch-panel" id="batchPanel">
+          <header class="batch-head">
+            <div>
+              <p class="eyebrow">Settle batch</p>
+              <h3>Basin distribution</h3>
+              <p class="muted">
+                Run Settle from many random starts and watch which line-energy
+                plateaus the system lands on. Click any bar or row to replay
+                that run's final configuration on the bubble field.
+              </p>
+            </div>
+            <div class="batch-controls">
+              <label>
+                Trials
+                <input id="batchCountInput" type="number" min="1" max="500" step="1" value="30" />
+              </label>
+              <button id="runBatchButton" type="button">Run batch</button>
+              <button id="clearBatchButton" type="button">Clear</button>
+              <span class="batch-status muted" id="batchStatus"></span>
+            </div>
+          </header>
+          <div class="batch-body">
+            <div class="batch-histogram" id="batchHistogram"></div>
+            <div class="batch-table-wrap">
+              <table class="batch-table" id="batchTable">
+                <thead>
+                  <tr>
+                    <th>#</th><th>E</th><th>rows</th><th>cols</th><th>diags</th><th>magic</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="session-section">
+            <header class="session-head">
+              <div>
+                <p class="eyebrow">Session log</p>
+                <h4>Cumulative settle distribution</h4>
+                <p class="muted">
+                  Every Settle in this page session — single button presses, batch
+                  trials, and replays — recorded in order. Watch the basin
+                  distribution and the temporal trace evolve as you explore. If
+                  the trace drifts downward, your kick + settle workflow is
+                  doing real basin-hopping, not lucky resampling.
+                </p>
+              </div>
+              <div class="session-controls">
+                <span class="session-status muted" id="sessionStatus"></span>
+                <button id="resetSessionButton" type="button">Reset session</button>
+              </div>
+            </header>
+            <div class="session-body">
+              <div class="session-histogram" id="sessionHistogram"></div>
+              <canvas id="sessionTrace" class="session-trace" width="640" height="180"></canvas>
+            </div>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <script type="module" src="./js/bubbleTrinityApp.js"></script>
+  </body>
+</html>
